@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Tooooools</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23aa3bff'/><text x='50' y='68' font-family='system-ui,sans-serif' font-size='50' font-weight='bold' fill='white' text-anchor='middle'>T</text></svg>">
+<style>
+:root{--text:#6b6375;--text-h:#08060d;--bg:#fff;--border:#e5e4e7;--accent:#aa3bff;--accent2:#7c3aed;--sans:system-ui,'Segoe UI',Roboto,sans-serif}
+@media(prefers-color-scheme:dark){:root{--text:#9ca3af;--text-h:#f3f4f6;--bg:#16171d;--border:#2e303a;--accent:#c084fc;--accent2:#a855f7}}
+*{box-sizing:border-box}
+body{margin:0;font:14px/145% var(--sans);color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+#app{width:100%;max-width:1400px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:22px;margin:0}
+header h1 a{text-decoration:none;color:var(--text-h)}
+nav{display:flex;gap:20px;align-items:center}
+nav a{font-size:14px;color:var(--text-h);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent;transition:.15s}
+nav a:hover{border-bottom-color:var(--accent)}
+nav a.active{border-bottom-color:var(--accent);color:var(--accent)}
+.main{flex:1;overflow:hidden}
+.footer{padding:20px 32px;border-top:1px solid var(--border);text-align:center;font-size:12px;color:var(--text)}
+.footer p{margin:4px 0}
+.footer a{color:var(--accent);text-decoration:none}
+
+/* Home */
+.home{display:flex;flex-direction:column;align-items:center;padding:60px 20px;gap:12px}
+.home h1{font-size:48px;color:var(--text-h);margin:0;letter-spacing:-1px}
+.home p{font-size:16px;color:var(--text);margin:0}
+.home .upload-box{width:100%;max-width:500px;margin-top:20px;padding:60px 20px;border:2px dashed var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:16px;cursor:pointer;transition:.2s}
+.home .upload-box:hover{border-color:var(--accent);background:var(--accent);color:#fff}
+.home .upload-box input{display:none}
+.home .upload-label{padding:12px 28px;background:var(--accent);color:#fff;border-radius:8px;font-size:14px;cursor:pointer;border:none;transition:opacity.2s}
+.home .upload-label:hover{opacity:.9}
+.effects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;width:100%;max-width:900px;margin:24px 0}
+.effects-grid a{display:block;padding:16px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text-h);font-size:13px;text-align:center;transition:.2s}
+.effects-grid a:hover{border-color:var(--accent);background:var(--accent);color:#fff}
+.effects-grid a .cat{font-size:10px;color:var(--text);display:block;margin-top:4px}
+.effects-grid a:hover .cat{color:rgba(255,255,255,.7)}
+
+/* Editor */
+.editor{display:flex;height:calc(100vh - 110px)}
+.sidebar{width:280px;padding:20px;border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
+.sidebar h3{font-size:14px;margin-bottom:12px;color:var(--text-h)}
+.slider-group{margin-bottom:12px}
+.slider-group .label{display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px;color:var(--text)}
+.slider-group input[type=range]{width:100%;accent-color:var(--accent);margin:0;height:4px;cursor:pointer}
+select{width:100%;padding:6px 8px;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--text-h);font-family:inherit;font-size:12px}
+.back-link{display:block;margin-bottom:16px;font-size:12px;color:var(--accent);text-decoration:none}
+.back-link:hover{text-decoration:underline}
+.canvas-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.canvas-size{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text)}
+.canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.canvas-wrap canvas{max-width:100%;max-height:calc(100vh-200px);border-radius:4px}
+.export-bar{padding:16px;border-top:1px solid var(--border);display:flex;justify-content:center;align-items:center;gap:12px}
+.export-btn{padding:12px 28px;background:var(--accent);color:#fff;border-radius:8px;font-size:14px;cursor:pointer;border:none;transition:opacity.2s}
+.export-btn:hover{opacity:.9}
+.hotkey{font-size:12px;color:var(--text)}
+
+/* About */
+.about{padding:60px 40px;max-width:640px;margin:0 auto}
+.about h1{font-size:32px;color:var(--text-h);margin:0 0 20px}
+.about p{line-height:1.7;font-size:15px}
+
+/* Responsive */
+@media(max-width:768px){.editor{flex-direction:column;height:auto}.sidebar{width:100%!important;border-right:none!important;border-bottom:1px solid var(--border)}.home h1{font-size:32px}.about{padding:30px 20px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+<h1><a href="#" onclick="navigate('')">Tooooools</a></h1>
+<nav>
+<a href="#" onclick="navigate('effects')" id="nav-effects">Effects</a>
+<a href="#" onclick="navigate('animate')" id="nav-animate">Animate</a>
+<a href="#" onclick="navigate('about')" id="nav-about">About</a>
+</nav>
+</header>
+<div class="main" id="main"></div>
+<footer class="footer">
+<p>Tooooools, created by <a href="https://pivosoki.com" target="_blank">Daniil Sukhovskoy</a>. Free for personal and commercial use. Attribution appreciated.</p>
+<p>&copy;Tooooools 2026</p>
+</footer>
+</div>
+<input type="file" accept=".jpg,.jpeg,.png" id="hidden-input" style="display:none">
+
+<script>
+// ---- DATA ----
+const effects=[
+{id:'stippling',label:'Stippling',cat:'effects'},
+{id:'dots',label:'Dots',cat:'effects'},
+{id:'patterns',label:'Patterns',cat:'effects'},
+{id:'edge',label:'Edge',cat:'effects'},
+{id:'distort',label:'Distort',cat:'effects'},
+{id:'displace',label:'Displace',cat:'effects'},
+{id:'dithering',label:'Dithering',cat:'effects'},
+{id:'bevel',label:'Bevel',cat:'effects'},
+{id:'recolor',label:'Recolor',cat:'effects'},
+{id:'scatter',label:'Scatter',cat:'effects'},
+{id:'cellular-automata',label:'Cellular Automata',cat:'effects'},
+{id:'gradients',label:'Gradients',cat:'effects'},
+{id:'crt',label:'CRT',cat:'effects'},
+{id:'ascii',label:'ASCII',cat:'effects'},
+{id:'slide',label:'Slide',cat:'animate'},
+{id:'stack',label:'Stack',cat:'animate'}
+];
+
+const state={
+  image:null,
+  blur:0,grain:0,gamma:1,blackPoint:0,whitePoint:255,
+  threshold:128,gridType:'Regular',gridAngle:0,
+  ySquares:20,xSquares:20,minSquareWidth:2,maxSquareWidth:20
+};
+
+// ---- ROUTING ----
+function navigate(path){
+  const main=document.getElementById('main');
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  if(!path||path==='effects')document.getElementById('nav-effects')?.classList.add('active');
+  else if(path==='animate')document.getElementById('nav-animate')?.classList.add('active');
+  else if(path==='about')document.getElementById('nav-about')?.classList.add('active');
+
+  if(path==='about'){renderAbout(main);return;}
+  if(path==='effects'||path==='animate'){renderGrid(main,path);return;}
+  if(path===''){renderHome(main);return;}
+
+  const parts=path.split('/');
+  if(parts.length===2){
+    const e=effects.find(x=>x.id===parts[1]);
+    if(e){renderEditor(main,e);return;}
+  }
+  renderHome(main);
+}
+
+function hashHandler(){
+  const h=location.hash.replace('#/','').replace(/^#/,'');
+  navigate(h||'');
+}
+window.addEventListener('hashchange',hashHandler);
+
+// ---- HOME ----
+function renderHome(main){
+  main.innerHTML=`<div class="home">
+    <h1>Tooooools</h1>
+    <p>Upload an image &rarr; Select and adjust effect &rarr; Export</p>
+    <div class="effects-grid">
+      ${effects.filter(e=>e.cat==='effects').map(e=>`<a href="#/effects/${e.id}">${e.label}<span class="cat">Effect</span></a>`).join('')}
+      ${effects.filter(e=>e.cat==='animate').map(e=>`<a href="#/animate/${e.id}">${e.label}<span class="cat">Animate</span></a>`).join('')}
+    </div>
+    <div class="upload-box" id="home-upload">
+      <span style="font-size:13px">or drop an image here</span>
+      <label class="upload-label">Get started<input type="file" accept=".jpg,.jpeg,.png" onchange="handleHomeUpload(event)"></label>
+      <span style="font-size:11px">[.jpg, .png, or .mp4]</span>
+    </div>
+  </div>`;
+  setupDrop(document.getElementById('home-upload'));
+}
+
+function handleHomeUpload(e){
+  const f=e.target.files[0];if(!f)return;
+  loadImage(f,()=>{
+    const first=effects[0];
+    location.hash='#/effects/'+first.id;
+  });
+}
+
+// ---- EFFECT GRID ----
+function renderGrid(main,cat){
+  const items=effects.filter(e=>e.cat===cat);
+  main.innerHTML=`<div class="home">
+    <h1>${cat==='effects'?'Effects':'Animate'}</h1>
+    <p style="font-size:14px">${effects.length} tools available</p>
+    <div class="effects-grid">
+      ${items.map(e=>`<a href="#/${cat}/${e.id}">${e.label}<span class="cat">${cat}</span></a>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ---- ABOUT ----
+function renderAbout(main){
+  main.innerHTML=`<div class="about">
+    <h1>About</h1>
+    <p>Tooooools is a free online image effects tool created by <a href="https://pivosoki.com" target="_blank">Daniil Sukhovskoy</a>. Upload any image and apply various artistic effects including stippling, dot patterns, edge detection, dithering, ASCII art, CRT simulation, and more.</p>
+    <p>Free for personal and commercial use. Attribution is not required, but appreciated.</p>
+    <p style="margin-top:32px"><a href="https://effect.app/" target="_blank">More effects &rarr;</a></p>
+  </div>`;
+}
+
+// ---- EDITOR ----
+function renderEditor(main,effect){
+  main.innerHTML=`<div class="editor">
+    <div class="sidebar">
+      <a href="#/effects" class="back-link">&larr; All Effects</a>
+      <div style="margin-bottom:20px">
+        <h3>${effect.label}</h3>
+        <p style="font-size:12px;color:var(--text);margin:0">${effect.cat}</p>
+      </div>
+      <h3>Image Preprocessing</h3>
+      ${sliderHTML('Blur','blur',0,10,.1)}
+      ${sliderHTML('Grain','grain',0,50,1)}
+      ${sliderHTML('Gamma','gamma',.1,3,.1)}
+      ${sliderHTML('Black Point','blackPoint',0,255,1)}
+      ${sliderHTML('White Point','whitePoint',0,255,1)}
+      <hr style="border:none;border-top:1px solid var(--border);margin:16px 0">
+      <h3>${effect.label} Settings</h3>
+      ${sliderHTML('Threshold','threshold',0,255,1)}
+      <div class="slider-group">
+        <label style="font-size:12px;color:var(--text);display:block;margin-bottom:4px">Grid Type</label>
+        <select onchange="state.gridType=this.value;render()"><option value="Regular">Regular</option><option value="Benday">Benday</option></select>
+      </div>
+      ${sliderHTML('Grid Angle','gridAngle',0,360,1)}
+      ${sliderHTML('Y Squares','ySquares',2,100,1)}
+      ${sliderHTML('X Squares','xSquares',2,100,1)}
+      ${sliderHTML('Min Width','minSquareWidth',1,50,1)}
+      ${sliderHTML('Max Width','maxSquareWidth',1,50,1)}
+    </div>
+    <div class="canvas-area" id="editor-canvas-area">
+      <div class="canvas-size">Canvas Size <span style="color:var(--text-h)" id="canvas-size-label">&mdash;</span></div>
+      <div class="canvas-wrap">
+        <canvas id="src-c" style="display:none"></canvas>
+        <canvas id="tmp-c" style="display:none"></canvas>
+        <canvas id="out-c"></canvas>
+      </div>
+      <div class="export-bar">
+        <button class="export-btn" onclick="exportImg()">Export canvas</button>
+        <span class="hotkey">Ctrl + S</span>
+      </div>
+    </div>
+  </div>`;
+
+  state.currentEffect=effect.id;
+  setupDrop(document.getElementById('editor-canvas-area'));
+
+  if(state.image){
+    setupCanvas();
+    render();
+  }else{
+    document.getElementById('canvas-size-label').textContent='Upload an image first';
+    document.getElementById('out-c').style.display='none';
+    // Show upload prompt inside canvas wrap
+    const wrap=document.querySelector('.canvas-wrap');
+    const prompt=document.createElement('div');
+    prompt.id='editor-prompt';
+    prompt.style.cssText='text-align:center;color:var(--text)';
+    prompt.innerHTML='<p style="font-size:16px;color:var(--text-h)">No image uploaded</p><p style="font-size:13px">Drop an image here or use Ctrl+O</p>';
+    wrap.appendChild(prompt);
+
+  }
+}
+
+function sliderHTML(label,key,min,max,step){
+  const v=state[key];
+  return `<div class="slider-group">
+    <div class="label"><span>${label}</span><span class="slider-val" id="sv-${key}">${typeof v==='number'?v.toFixed(step<1?1:0):v}</span></div>
+    <input type="range" min="${min}" max="${max}" step="${step}" value="${v}" oninput="updateVal('${key}',parseFloat(this.value))">
+  </div>`;
+}
+
+function updateVal(key,v){
+  state[key]=v;
+  const el=document.getElementById('sv-'+key);
+  if(el)el.textContent=typeof v==='number'?v.toFixed(Number.isInteger(v)?0:1):v;
+  render();
+}
+
+// ---- IMAGE LOADING ----
+function loadImage(file,cb){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{state.image=img;if(cb)cb();};
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setupCanvas(){
+  const img=state.image;if(!img)return;
+  let w=img.width,h=img.height;
+  if(w>800){h=(800/w)*h;w=800;}
+  ['src-c','tmp-c','out-c'].forEach(id=>{
+    const c=document.getElementById(id);
+    if(c){c.width=Math.round(w);c.height=Math.round(h);c.style.display='';}
+  });
+  document.getElementById('canvas-size-label').textContent=`${Math.round(w)} x ${Math.round(h)}`;
+  const p=document.getElementById('editor-prompt');
+  if(p)p.remove();
+}
+
+function setupDrop(el){
+  if(!el)return;
+  el.addEventListener('dragover',e=>e.preventDefault());
+  el.addEventListener('drop',e=>{
+    e.preventDefault();
+    const f=e.dataTransfer.files[0];
+    if(f&&f.type.startsWith('image/')){
+      loadImage(f,()=>{
+        setupCanvas();
+        render();
+        if(!location.hash.includes('/effects/')&&!location.hash.includes('/animate/')){
+          location.hash='#/effects/'+effects[0].id;
+        }
+      });
+    }
+  });
+}
+
+// ---- RENDER ----
+function render(){
+  const src=document.getElementById('src-c');
+  const out=document.getElementById('out-c');
+  const tmp=document.getElementById('tmp-c');
+  if(!src||!out||!state.image)return;
+
+  const sc=src.getContext('2d');
+  sc.drawImage(state.image,0,0,src.width,src.height);
+
+  if(state.blur>0&&tmp){
+    const tc=tmp;tc.width=src.width;tc.height=src.height;
+    const tctx=tc.getContext('2d');
+    tctx.filter=`blur(${state.blur}px)`;
+    tctx.drawImage(src,0,0);
+    tctx.filter='none';
+    sc.drawImage(tc,0,0);
+  }
+
+  preprocess(sc,src.width,src.height);
+
+  const oc=out.getContext('2d');
+  oc.clearRect(0,0,out.width,out.height);
+  const fn=effectFns[state.currentEffect];
+  if(fn)fn(oc,src);
+}
+
+function preprocess(ctx,w,h){
+  const d=ctx.getImageData(0,0,w,h);
+  const data=d.data;
+  const gamma=state.gamma,grainVal=state.grain,bpVal=state.blackPoint,wpVal=state.whitePoint;
+  for(let i=0;i<data.length;i+=4){
+    let r=data[i],g=data[i+1],b=data[i+2];
+    if(gamma!==1){r=255*Math.pow(r/255,1/gamma);g=255*Math.pow(g/255,1/gamma);b=255*Math.pow(b/255,1/gamma);}
+    r=(r-bpVal)/(wpVal-bpVal)*255;
+    g=(g-bpVal)/(wpVal-bpVal)*255;
+    b=(b-bpVal)/(wpVal-bpVal)*255;
+    if(grainVal>0){const n=(Math.random()-.5)*grainVal;r+=n;g+=n;b+=n;}
+    data[i]=Math.max(0,Math.min(255,r));
+    data[i+1]=Math.max(0,Math.min(255,g));
+    data[i+2]=Math.max(0,Math.min(255,b));
+  }
+  ctx.putImageData(d,0,0);
+}
+
+function bright(r,g,b){return .299*r+.587*g+.114*b}
+
+// ---- EFFECT FUNCTIONS ----
+const effectFns={
+stippling(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),step=Math.max(2,Math.floor(32-state.threshold/8));
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+  for(let y=0;y<h;y+=step)for(let x=0;x<w;x+=step){
+    const p=sc.getImageData(x,y,1,1).data,dark=255-bright(p[0],p[1],p[2]);
+    if(dark>10){const r=(dark/255)*(step/2)*(state.maxSquareWidth/10);ctx.fillStyle=`rgb(${p[0]},${p[1]},${p[2]})`;ctx.beginPath();ctx.arc(x,y,Math.max(.5,r),0,Math.PI*2);ctx.fill();}
+  }
+},
+dots(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d');
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+  const gx=state.xSquares,gy=state.ySquares,cw=w/gx,ch=h/gy;
+  for(let y=0;y<gy;y++)for(let x=0;x<gx;x++){
+    const cx=x*cw+cw/2,cy=y*ch+ch/2;
+    const p=sc.getImageData(Math.min(Math.floor(cx),w-1),Math.min(Math.floor(cy),h-1),1,1).data;
+    const r=((255-bright(p[0],p[1],p[2]))/255)*(Math.min(cw,ch)/2)*(state.maxSquareWidth/10);
+    if(r>.5){ctx.fillStyle=`rgb(${p[0]},${p[1]},${p[2]})`;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();}
+  }
+},
+patterns(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),size=Math.max(2,state.ySquares),angle=state.gridAngle*Math.PI/180;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+  ctx.save();ctx.translate(w/2,h/2);ctx.rotate(angle);ctx.translate(-w/2,-h/2);
+  for(let y=-h;y<h*2;y+=size)for(let x=-w;x<w*2;x+=size){
+    const px=Math.min(Math.max(Math.floor(x),0),w-1),py=Math.min(Math.max(Math.floor(y),0),h-1);
+    const p=sc.getImageData(px,py,1,1).data;
+    if((p[0]+p[1]+p[2])/3<state.threshold){ctx.fillStyle=`rgb(${p[0]},${p[1]},${p[2]})`;ctx.fillRect(x,y,size-1,size-1);}
+  }
+  ctx.restore();
+},
+edge(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h);
+  const sx=[-1,0,1,-2,0,2,-1,0,1],sy=[-1,-2,-1,0,0,0,1,2,1];
+  for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
+    let gx=0,gy=0;
+    for(let ky=-1;ky<=1;ky++)for(let kx=-1;kx<=1;kx++){
+      const idx=((y+ky)*w+(x+kx))*4,b=bright(sd[idx],sd[idx+1],sd[idx+2]),ki=(ky+1)*3+(kx+1);
+      gx+=b*sx[ki];gy+=b*sy[ki];
+    }
+    const m=Math.sqrt(gx*gx+gy*gy),idx=(y*w+x)*4,v=m>state.threshold?255:0;
+    od.data[idx]=v;od.data[idx+1]=v;od.data[idx+2]=v;od.data[idx+3]=255;
+  }
+  ctx.putImageData(od,0,0);
+},
+distort(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h);
+  const amp=state.maxSquareWidth*2,freq=.02*state.threshold;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const dx=x+Math.sin(y*freq)*amp,dy=y+Math.cos(x*freq)*amp,sx=Math.floor(dx),sy=Math.floor(dy);
+    if(sx>=0&&sx<w&&sy>=0&&sy<h){const si=(sy*w+sx)*4,di=(y*w+x)*4;od.data[di]=sd[si];od.data[di+1]=sd[si+1];od.data[di+2]=sd[si+2];od.data[di+3]=255;}
+  }
+  ctx.putImageData(od,0,0);
+},
+displace(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h),scal=state.maxSquareWidth;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const idx=(y*w+x)*4,b=bright(sd[idx],sd[idx+1],sd[idx+2]),off=((b-128)/128)*scal,sx=Math.floor(x+off),sy=Math.floor(y+off*.5);
+    if(sx>=0&&sx<w&&sy>=0&&sy<h){const si=(sy*w+sx)*4;od.data[idx]=sd[si];od.data[idx+1]=sd[si+1];od.data[idx+2]=sd[si+2];od.data[idx+3]=255;}
+  }
+  ctx.putImageData(od,0,0);
+},
+dithering(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),id=sc.getImageData(0,0,w,h);
+  const gray=new Float32Array(w*h);for(let i=0;i<w*h;i++)gray[i]=bright(id.data[i*4],id.data[i*4+1],id.data[i*4+2]);
+  const od=ctx.createImageData(w,h);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const idx=y*w+x,oldV=gray[idx],newV=oldV<state.threshold?0:255,err=oldV-newV;gray[idx]=newV;
+    if(x+1<w)gray[idx+1]+=err*7/16;
+    if(y+1<h){gray[(y+1)*w+x]+=err*5/16;if(x>0)gray[(y+1)*w+x-1]+=err*3/16;if(x+1<w)gray[(y+1)*w+x+1]+=err*1/16;}
+    const oi=idx*4;od.data[oi]=newV;od.data[oi+1]=newV;od.data[oi+2]=newV;od.data[oi+3]=255;
+  }
+  ctx.putImageData(od,0,0);
+},
+bevel(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h),depth=state.maxSquareWidth;
+  for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){
+    const top=((y-1)*w+x)*4,bot=((y+1)*w+x)*4,l=(y*w+(x-1))*4,ri=(y*w+(x+1))*4,idx=(y*w+x)*4;
+    const tb=bright(sd[top],sd[top+1],sd[top+2]),bb=bright(sd[bot],sd[bot+1],sd[bot+2]),lb=bright(sd[l],sd[l+1],sd[l+2]),rb=bright(sd[ri],sd[ri+1],sd[ri+2]);
+    const dx=(rb-lb)/255,dy=(bb-tb)/255,hl=Math.max(0,dx+dy)*depth,sh=Math.max(0,-(dx+dy))*depth;
+    od.data[idx]=Math.min(255,sd[idx]+hl-sh);od.data[idx+1]=Math.min(255,sd[idx+1]+hl-sh);od.data[idx+2]=Math.min(255,sd[idx+2]+hl-sh);od.data[idx+3]=255;
+  }
+  ctx.putImageData(od,0,0);
+},
+recolor(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h),hs=state.gridAngle;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const idx=(y*w+x)*4;let r=sd[idx],g=sd[idx+1],b=sd[idx+2];
+    const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2/255;
+    if(mx!==mn){const d=(mx-mn)/255,s=l>.5?d/(2-mx/255-mn/255):d/(mx/255+mn/255);let h=0;
+      if(r===mx)h=((g-b)/255/d+(g<b?6:0))/6;else if(g===mx)h=((b-r)/255/d+2)/6;else h=((r-g)/255/d+4)/6;
+      h=(h+hs/360)%1;if(h<0)h+=1;
+      const hue2rgb=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<.5)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;};
+      const q2=l<.5?l*(1+s):l+s-l*s,p2=2*l-q2;
+      r=hue2rgb(p2,q2,h+1/3)*255;g=hue2rgb(p2,q2,h)*255;b=hue2rgb(p2,q2,h-1/3)*255;
+    }
+    od.data[idx]=Math.max(0,Math.min(255,r));od.data[idx+1]=Math.max(0,Math.min(255,g));od.data[idx+2]=Math.max(0,Math.min(255,b));od.data[idx+3]=255;
+  }
+  ctx.putImageData(od,0,0);
+},
+scatter(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,dens=Math.max(100,state.threshold*20),amnt=state.maxSquareWidth*3;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+  for(let i=0;i<dens;i++){const x=Math.floor(Math.random()*w),y=Math.floor(Math.random()*h),idx=(y*w+x)*4,b=bright(sd[idx],sd[idx+1],sd[idx+2]),sz=((255-b)/255)*state.maxSquareWidth;
+    if(sz>.5){const sx=x+(Math.random()-.5)*amnt,sy=y+(Math.random()-.5)*amnt;ctx.fillStyle=`rgb(${sd[idx]},${sd[idx+1]},${sd[idx+2]})`;ctx.beginPath();ctx.arc(sx,sy,sz,0,Math.PI*2);ctx.fill();}
+  }
+},
+'cellular-automata'(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,cs=Math.max(2,state.ySquares),gw=Math.ceil(w/cs),gh=Math.ceil(h/cs);
+  let grid=new Uint8Array(gw*gh);
+  for(let gy=0;gy<gh;gy++)for(let gx=0;gx<gw;gx++){const px=Math.min(gx*cs,w-1),py=Math.min(gy*cs,h-1),idx=(py*w+px)*4,b=bright(sd[idx],sd[idx+1],sd[idx+2]);grid[gy*gw+gx]=b<state.threshold?1:0;}
+  for(let n=0;n<Math.max(1,Math.floor(state.maxSquareWidth/3));n++){const ng=new Uint8Array(gw*gh);
+    for(let gy=0;gy<gh;gy++)for(let gx=0;gx<gw;gx++){let nei=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(dx===0&&dy===0)continue;nei+=grid[((gy+dy+gh)%gh)*gw+((gx+dx+gw)%gw)];}ng[gy*gw+gx]=grid[gy*gw+gx]?(nei===2||nei===3?1:0):(nei===3?1:0);}grid=ng;}
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+  for(let gy=0;gy<gh;gy++)for(let gx=0;gx<gw;gx++)if(grid[gy*gw+gx]){const px=Math.min(gx*cs,w-1),py=Math.min(gy*cs,h-1),idx=(py*w+px)*4;ctx.fillStyle=`rgb(${sd[idx]},${sd[idx+1]},${sd[idx+2]})`;ctx.fillRect(gx*cs,gy*cs,cs-1,cs-1);}
+},
+gradients(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h),bands=Math.max(2,Math.floor(state.threshold/20));
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const idx=(y*w+x)*4,b=bright(sd[idx],sd[idx+1],sd[idx+2]),band=Math.floor((b/255)*bands),val=(band/bands)*255;od.data[idx]=val;od.data[idx+1]=val;od.data[idx+2]=val;od.data[idx+3]=255;}
+  ctx.putImageData(od,0,0);
+},
+crt(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h),si=state.maxSquareWidth/20,cv=state.threshold/500;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const cx=(x/w-.5)*2,cy=(y/h-.5)*2,dx=cx*(1+cv*cy*cy),dy=cy*(1+cv*cx*cx),sx=Math.floor(((dx+1)/2)*w),sy=Math.floor(((dy+1)/2)*h),di=(y*w+x)*4;
+    if(sx>=0&&sx<w&&sy>=0&&sy<h){const si2=(sy*w+sx)*4,scan=Math.sin(y*.5)*si;od.data[di]=Math.max(0,Math.min(255,sd[si2]+scan));od.data[di+1]=Math.max(0,Math.min(255,sd[si2+1]+scan));od.data[di+2]=Math.max(0,Math.min(255,sd[si2+2]+scan));od.data[di+3]=255;}
+  }
+  for(let y=0;y<h;y+=3)for(let x=0;x<w;x++){const idx=(y*w+x)*4;od.data[idx]*=.7;od.data[idx+1]*=.7;od.data[idx+2]*=.7;}
+  ctx.putImageData(od,0,0);
+},
+ascii(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,ch=' .,:;i1tfLCG08@',fs=Math.max(4,Math.floor(state.ySquares/2)),cw=fs*.6,ch2=fs;
+  ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);ctx.font=fs+'px monospace';ctx.fillStyle='#fff';ctx.textBaseline='top';
+  for(let y=0;y<h;y+=ch2)for(let x=0;x<w;x+=cw){const px=Math.min(Math.floor(x),w-1),py=Math.min(Math.floor(y),h-1),idx=(py*w+px)*4,b=bright(sd[idx],sd[idx+1],sd[idx+2]),ci=Math.floor(((255-b)/255)*(ch.length-1));ctx.fillText(ch[ci],x,y);}
+},
+slide(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h),slices=Math.max(4,state.ySquares),sh=h/slices,off=state.maxSquareWidth*5;
+  for(let y=0;y<h;y++){const si=Math.floor(y/sh),so=si%2===0?off:-off;for(let x=0;x<w;x++){const sx=(x+so+w)%w,si2=(y*w+sx)*4,di=(y*w+x)*4;od.data[di]=sd[si2];od.data[di+1]=sd[si2+1];od.data[di+2]=sd[si2+2];od.data[di+3]=255;}}
+  ctx.putImageData(od,0,0);
+},
+stack(ctx,src){
+  const w=src.width,h=src.height,sc=src.getContext('2d'),sd=sc.getImageData(0,0,w,h).data,od=ctx.createImageData(w,h),layers=Math.max(2,Math.floor(state.ySquares/5)),lh=h/layers;
+  for(let y=0;y<h;y++){const li=Math.floor(y/lh),lo=li*10;for(let x=0;x<w;x++){const sx=(x+lo)%w,si=(y*w+sx)*4,di=(y*w+x)*4,b=bright(sd[si],sd[si+1],sd[si+2])*(1-li*.1);od.data[di]=Math.max(0,Math.min(255,b));od.data[di+1]=Math.max(0,Math.min(255,b));od.data[di+2]=Math.max(0,Math.min(255,b));od.data[di+3]=255;}}
+  ctx.putImageData(od,0,0);
+}
+};
+
+// ---- EXPORT ----
+function exportImg(){
+  const c=document.getElementById('out-c');if(!c)return;
+  const a=document.createElement('a');a.download='export.png';a.href=c.toDataURL('image/png');a.click();
+}
+
+// ---- KEYBOARD ----
+document.getElementById('hidden-input').onchange=function(e){
+  const f=e.target.files[0];if(!f)return;
+  loadImage(f,()=>{
+    setupCanvas();render();
+    if(!location.hash.includes('/effects/')&&!location.hash.includes('/animate/')){
+      location.hash='#/effects/'+effects[0].id;
+    }
+  });
+};
+
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey&&e.key==='o'){e.preventDefault();document.getElementById('hidden-input').click();}
+  if(e.ctrlKey&&e.key==='s'){e.preventDefault();exportImg();}
+});
+
+// ---- INIT ----
+hashHandler();
+</script>
+</body>
+</html>
