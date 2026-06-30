@@ -1,5 +1,5 @@
 {
-  "name": "toooools-clone",
+  "name": "designstack",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,11 +9,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "wrangler pages deploy dist",
-    "deploy:ci": "npm run build && wrangler pages deploy dist --project-name toooools-clone"
+    "deploy:ci": "npm run build && wrangler pages deploy dist --project-name designstack"
   },
   "dependencies": {
-    "fabric": "^7.4.0",
-    "konva": "^10.3.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.0"

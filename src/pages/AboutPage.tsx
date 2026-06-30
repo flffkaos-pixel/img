@@ -3,7 +3,7 @@ export default function AboutPage() {
     <div style={{ padding: '60px 40px', maxWidth: 640, margin: '0 auto' }}>
       <h1 style={{ fontSize: 32, color: 'var(--text-h)', margin: '0 0 20px' }}>About</h1>
       <p style={{ lineHeight: 1.7, fontSize: 15 }}>
-        Tooooools is a free online image effects tool created by{' '}
+        Designstack is a free online image effects tool created by{' '}
         <a href="https://pivosoki.com" target="_blank" rel="noopener noreferrer">Daniil Sukhovskoy</a>.
         Upload any image and apply various artistic effects including stippling, dot patterns,
         edge detection, dithering, ASCII art, CRT simulation, and more.

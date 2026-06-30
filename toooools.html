@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Tooooools</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23aa3bff'/><text x='50' y='68' font-family='system-ui,sans-serif' font-size='50' font-weight='bold' fill='white' text-anchor='middle'>T</text></svg>">
+<title>Designstack</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23aa3bff'/><text x='50' y='68' font-family='system-ui,sans-serif' font-size='50' font-weight='bold' fill='white' text-anchor='middle'>D</text></svg>">
 <style>
 :root{--text:#6b6375;--text-h:#08060d;--bg:#fff;--border:#e5e4e7;--accent:#aa3bff;--accent2:#7c3aed;--sans:system-ui,'Segoe UI',Roboto,sans-serif}
 @media(prefers-color-scheme:dark){:root{--text:#9ca3af;--text-h:#f3f4f6;--bg:#16171d;--border:#2e303a;--accent:#c084fc;--accent2:#a855f7}}
@@ -69,7 +69,7 @@ select{width:100%;padding:6px 8px;border-radius:4px;border:1px solid var(--borde
 <body>
 <div id="app">
 <header>
-<h1><a href="#" onclick="navigate('')">Tooooools</a></h1>
+<h1><a href="#" onclick="navigate('')">Designstack</a></h1>
 <nav>
 <a href="#" onclick="navigate('effects')" id="nav-effects">Effects</a>
 <a href="#" onclick="navigate('animate')" id="nav-animate">Animate</a>
@@ -78,8 +78,8 @@ select{width:100%;padding:6px 8px;border-radius:4px;border:1px solid var(--borde
 </header>
 <div class="main" id="main"></div>
 <footer class="footer">
-<p>Tooooools, created by <a href="https://pivosoki.com" target="_blank">Daniil Sukhovskoy</a>. Free for personal and commercial use. Attribution appreciated.</p>
-<p>&copy;Tooooools 2026</p>
+<p>Designstack, created by <a href="https://pivosoki.com" target="_blank">Daniil Sukhovskoy</a>. Free for personal and commercial use. Attribution appreciated.</p>
+<p>&copy;Designstack 2026</p>
 </footer>
 </div>
 <input type="file" accept=".jpg,.jpeg,.png" id="hidden-input" style="display:none">
@@ -141,7 +141,7 @@ window.addEventListener('hashchange',hashHandler);
 // ---- HOME ----
 function renderHome(main){
   main.innerHTML=`<div class="home">
-    <h1>Tooooools</h1>
+    <h1>Designstack</h1>
     <p>Upload an image &rarr; Select and adjust effect &rarr; Export</p>
     <div class="effects-grid">
       ${effects.filter(e=>e.cat==='effects').map(e=>`<a href="#/effects/${e.id}">${e.label}<span class="cat">Effect</span></a>`).join('')}
@@ -180,7 +180,7 @@ function renderGrid(main,cat){
 function renderAbout(main){
   main.innerHTML=`<div class="about">
     <h1>About</h1>
-    <p>Tooooools is a free online image effects tool created by <a href="https://pivosoki.com" target="_blank">Daniil Sukhovskoy</a>. Upload any image and apply various artistic effects including stippling, dot patterns, edge detection, dithering, ASCII art, CRT simulation, and more.</p>
+    <p>Designstack is a free online image effects tool created by <a href="https://pivosoki.com" target="_blank">Daniil Sukhovskoy</a>. Upload any image and apply various artistic effects including stippling, dot patterns, edge detection, dithering, ASCII art, CRT simulation, and more.</p>
     <p>Free for personal and commercial use. Attribution is not required, but appreciated.</p>
     <p style="margin-top:32px"><a href="https://effect.app/" target="_blank">More effects &rarr;</a></p>
   </div>`;
@@ -277,7 +277,6 @@ function loadImage(file,cb){
 function setupCanvas(){
   const img=state.image;if(!img)return;
   let w=img.width,h=img.height;
-  if(w>800){h=(800/w)*h;w=800;}
   ['src-c','tmp-c','out-c'].forEach(id=>{
     const c=document.getElementById(id);
     if(c){c.width=Math.round(w);c.height=Math.round(h);c.style.display='';}

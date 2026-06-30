@@ -26,18 +26,13 @@ export function useCanvas() {
     });
   }, []);
 
-  const setupCanvas = useCallback((img: HTMLImageElement, maxWidth = 800) => {
+  const setupCanvas = useCallback((img: HTMLImageElement) => {
     const canvas = sourceCanvasRef.current;
     const tempCanvas = tempCanvasRef.current;
     if (!canvas) return { width: 0, height: 0 };
 
-    let width = img.width;
-    let height = img.height;
-
-    if (width > maxWidth) {
-      height = (maxWidth / width) * height;
-      width = maxWidth;
-    }
+    const width = img.width;
+    const height = img.height;
 
     canvas.width = width;
     canvas.height = height;
