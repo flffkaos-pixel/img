@@ -11,18 +11,46 @@ export function useCanvas() {
 
   const loadImage = useCallback((file: File): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          originalImageRef.current = img;
-          resolve(img);
+      const url = URL.createObjectURL(file);
+
+      if (file.type.startsWith('video/')) {
+        const video = document.createElement('video');
+        video.muted = true;
+        video.onloadeddata = () => {
+          video.currentTime = 0;
         };
-        img.onerror = reject;
-        img.src = e.target?.result as string;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+        video.onseeked = () => {
+          const c = document.createElement('canvas');
+          c.width = video.videoWidth;
+          c.height = video.videoHeight;
+          c.getContext('2d')!.drawImage(video, 0, 0);
+          URL.revokeObjectURL(url);
+          const img = new Image();
+          img.onload = () => {
+            originalImageRef.current = img;
+            resolve(img);
+          };
+          img.onerror = reject;
+          img.src = c.toDataURL('image/png');
+        };
+        video.onerror = reject;
+        video.src = url;
+        video.load();
+      } else {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            originalImageRef.current = img;
+            URL.revokeObjectURL(url);
+            resolve(img);
+          };
+          img.onerror = reject;
+          img.src = e.target?.result as string;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      }
     });
   }, []);
 
@@ -32,7 +60,8 @@ export function useCanvas() {
 
   const renderEffect = useCallback((
     effectName: EffectName,
-    params: EffectParams
+    params: EffectParams,
+    outputSize?: number
   ) => {
     const sourceCanvas = sourceCanvasRef.current;
     const outputCanvas = outputCanvasRef.current;
@@ -40,15 +69,13 @@ export function useCanvas() {
     const originalImg = originalImageRef.current;
     if (!sourceCanvas || !outputCanvas || !originalImg) return;
 
-    // Ensure canvas matches original image dimensions
+    // Source canvas always at original resolution for processing
     sourceCanvas.width = originalImg.width;
     sourceCanvas.height = originalImg.height;
     if (tempCanvas) {
       tempCanvas.width = originalImg.width;
       tempCanvas.height = originalImg.height;
     }
-    outputCanvas.width = originalImg.width;
-    outputCanvas.height = originalImg.height;
 
     const srcCtx = sourceCanvas.getContext('2d')!;
     srcCtx.drawImage(originalImg, 0, 0);
@@ -68,8 +95,23 @@ export function useCanvas() {
 
     preprocessImage(srcCtx, sourceCanvas.width, sourceCanvas.height, params);
 
+    // Output canvas at target size (maintaining aspect ratio)
+    let outW = originalImg.width;
+    let outH = originalImg.height;
+    if (outputSize && outputSize > 0) {
+      const ratio = originalImg.width / originalImg.height;
+      outW = outputSize;
+      outH = Math.round(outputSize / ratio);
+    }
+    outputCanvas.width = outW;
+    outputCanvas.height = outH;
+
     const outCtx = outputCanvas.getContext('2d')!;
-    applyEffect(effectName, outCtx, sourceCanvas, params);
+    if (params.showEffect) {
+      applyEffect(effectName, outCtx, sourceCanvas, params);
+    } else {
+      outCtx.drawImage(sourceCanvas, 0, 0, outW, outH);
+    }
   }, []);
 
   const exportCanvas = useCallback((filename = 'export.png') => {

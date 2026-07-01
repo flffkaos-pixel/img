@@ -11,6 +11,7 @@ export default function EffectPage() {
   const [hasImage, setHasImage] = useState(false)
   const [imageKey, setImageKey] = useState(0)
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 })
+  const [outputSize, setOutputSize] = useState(600)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const sampleLoaded = useRef(false)
 
@@ -38,9 +39,9 @@ export default function EffectPage() {
 
   useEffect(() => {
     if (hasImage && sourceCanvasRef.current) {
-      renderEffect(activeEffect, params)
+      renderEffect(activeEffect, params, outputSize)
     }
-  }, [activeEffect, params, hasImage, imageKey, renderEffect])
+  }, [activeEffect, params, hasImage, imageKey, outputSize, renderEffect])
 
   const handleImageLoad = useCallback(async (file: File) => {
     const img = await loadImage(file)
@@ -81,14 +82,17 @@ export default function EffectPage() {
           </p>
         </div>
 
+        <SliderControl label="Canvas Size" value={outputSize} min={100} max={1000} step={1}
+          onChange={setOutputSize} />
+
         <h3 style={{ fontSize: 14, marginBottom: 12, color: 'var(--text-h)' }}>
           Image Preprocessing
         </h3>
         <SliderControl label="Blur" value={params.blur} min={0} max={10} step={0.1}
           onChange={v => setParams(p => ({ ...p, blur: v }))} />
-        <SliderControl label="Grain" value={params.grain} min={0} max={50} step={1}
+        <SliderControl label="Grain" value={params.grain} min={0} max={1} step={0.01}
           onChange={v => setParams(p => ({ ...p, grain: v }))} />
-        <SliderControl label="Gamma" value={params.gamma} min={0.1} max={3} step={0.1}
+        <SliderControl label="Gamma" value={params.gamma} min={0.1} max={2} step={0.1}
           onChange={v => setParams(p => ({ ...p, gamma: v }))} />
         <SliderControl label="Black Point" value={params.blackPoint} min={0} max={255} step={1}
           onChange={v => setParams(p => ({ ...p, blackPoint: v }))} />
@@ -96,6 +100,17 @@ export default function EffectPage() {
           onChange={v => setParams(p => ({ ...p, whitePoint: v }))} />
 
         <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '16px 0' }} />
+        <label style={{
+          display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer',
+          fontSize: 13, color: 'var(--text-h)', marginBottom: 16, fontFamily: 'monospace'
+        }}>
+          <span>[</span>
+          <input type="checkbox" checked={params.showEffect}
+            onChange={e => setParams(p => ({ ...p, showEffect: e.target.checked }))}
+            style={{ margin: 0 }} />
+          <span>]</span>
+          <span style={{ fontFamily: 'var(--sans)' }}>Show Effect</span>
+        </label>
         <h3 style={{ fontSize: 14, marginBottom: 12, color: 'var(--text-h)' }}>
           {effectConfig?.label || activeEffect} Settings
         </h3>
@@ -105,13 +120,14 @@ export default function EffectPage() {
           <label style={{ fontSize: 12, color: 'var(--text)', display: 'block', marginBottom: 4 }}>
             Grid Type
           </label>
-          <select value={params.gridType}
-            onChange={e => setParams(p => ({ ...p, gridType: e.target.value as 'Regular' | 'Benday' }))}>
-            <option value="Regular">Regular</option>
-            <option value="Benday">Benday</option>
-          </select>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <button className={params.gridType === 'Regular' ? 'grid-btn active' : 'grid-btn'}
+              onClick={() => setParams(p => ({ ...p, gridType: 'Regular' }))}>Regular</button>
+            <button className={params.gridType === 'Benday' ? 'grid-btn active' : 'grid-btn'}
+              onClick={() => setParams(p => ({ ...p, gridType: 'Benday' }))}>Benday</button>
+          </div>
         </div>
-        <SliderControl label="Grid Angle" value={params.gridAngle} min={0} max={360} step={1}
+        <SliderControl label="Grid Angle" value={params.gridAngle} min={-45} max={45} step={1}
           onChange={v => setParams(p => ({ ...p, gridAngle: v }))} />
         <SliderControl label="Y Squares" value={params.ySquares} min={2} max={100} step={1}
           onChange={v => setParams(p => ({ ...p, ySquares: v }))} />
@@ -131,19 +147,29 @@ export default function EffectPage() {
             flex: 1, display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center', gap: 16
           }}>
-            <p style={{ fontSize: 16, color: 'var(--text-h)', margin: 0 }}>Drop an image here</p>
-            <p style={{ fontSize: 13, color: 'var(--text)', margin: 0 }}>or use Ctrl+O to open a file</p>
+            <p style={{ fontSize: 16, color: 'var(--text-h)', margin: 0 }}>Upload media</p>
+            <p style={{ fontSize: 13, color: 'var(--text)', margin: 0 }}>.jpg, .png, or .mp4</p>
             <label className="upload-btn">
-              Open image
-              <input type="file" accept=".jpg,.jpeg,.png" style={{ display: 'none' }}
+              Get started
+              <input type="file" accept=".jpg,.jpeg,.png,.mp4" style={{ display: 'none' }}
                 onChange={e => { const f = e.target.files?.[0]; if (f) handleImageLoad(f) }} />
             </label>
           </div>
         ) : (
           <>
             <div className="canvas-size">
-              Canvas Size <span style={{ color: 'var(--text-h)' }}>
-                {canvasSize.w} x {canvasSize.h}
+              <span>Canvas Size <span style={{ color: 'var(--text-h)' }}>
+                {canvasSize.w} × {canvasSize.h}
+              </span></span>
+              <span style={{ color: 'var(--text)' }}>→</span>
+              <span style={{ color: 'var(--text-h)' }}>
+                {(() => {
+                  if (!canvasSize.w) return '0 × 0'
+                  const r = canvasSize.w / canvasSize.h
+                  const ow = outputSize
+                  const oh = Math.round(outputSize / r)
+                  return `${ow} × ${oh}`
+                })()}
               </span>
             </div>
             <div className="canvas-wrap">
@@ -153,15 +179,17 @@ export default function EffectPage() {
             </div>
             <div className="export-bar">
               <button className="export-btn" onClick={() => exportCanvas()}>Export canvas</button>
-              <button className="export-btn" onClick={() => fileInputRef.current?.click()}>Open image</button>
-              <span className="hotkey">Ctrl + S</span>
-              <span className="hotkey">Ctrl + O</span>
+              <button className="export-btn" onClick={() => fileInputRef.current?.click()}>Upload media</button>
+              <span className="hotkey">Ctrl + S Ctrl + O</span>
+            </div>
+            <div style={{ padding: '6px 20px', fontSize: 12, color: 'var(--text)', textAlign: 'center' }}>
+              .jpg, .png, or .mp4
             </div>
           </>
         )}
       </div>
 
-      <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png"
+      <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.mp4"
         style={{ display: 'none' }}
         onChange={e => { const f = e.target.files?.[0]; if (f) handleImageLoad(f) }} />
     </div>
@@ -172,13 +200,30 @@ function SliderControl({ label, value, min, max, step, onChange }: {
   label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void
 }) {
   return (
-    <div className="slider-group">
+    <div className="slider-group" style={{ marginBottom: 16 }}>
       <div className="label">
         <span>{label}</span>
-        <span>{typeof value === 'number' ? value.toFixed(step < 1 ? 1 : 0) : value}</span>
       </div>
-      <input type="range" min={min} max={max} step={step} value={value}
-        onChange={e => onChange(parseFloat(e.target.value))} />
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <input type="range" min={min} max={max} step={step} value={value}
+          onChange={e => onChange(parseFloat(e.target.value))}
+          style={{ flex: 1 }} />
+        <input type="number" min={min} max={max} step={step} value={value}
+          onChange={e => {
+            let v = parseFloat(e.target.value)
+            if (isNaN(v)) return
+            if (v < min) v = min
+            if (v > max) v = max
+            onChange(v)
+          }}
+          style={{
+            width: 60, padding: '4px 6px',
+            border: '1px solid var(--border)',
+            borderRadius: 4, background: 'var(--bg)',
+            color: 'var(--text-h)', fontSize: 12,
+            fontFamily: 'inherit', textAlign: 'center'
+          }} />
+      </div>
     </div>
   )
 }
