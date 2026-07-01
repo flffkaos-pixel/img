@@ -26,7 +26,8 @@ export default function EffectPage() {
     loadSample(img)
     setCanvasSize({ w: img.width, h: img.height })
     setHasImage(true)
-    // setupCanvas runs after canvas renders via effect below
+    // force re-render effect on new image
+    setImageKey(k => k + 1)
   }, [loadSample])
 
   useEffect(() => {
@@ -36,24 +37,7 @@ export default function EffectPage() {
   }, [initImage])
 
   useEffect(() => {
-    if (!hasImage || !sourceCanvasRef.current) return
-    setupCanvasFromImage()
-  }, [hasImage])
-
-  const setupCanvasFromImage = useCallback(() => {
-    const canvas = sourceCanvasRef.current
-    if (!canvas) return
-    canvas.width = canvasSize.w
-    canvas.height = canvasSize.h
-    if (tempCanvasRef.current) {
-      tempCanvasRef.current.width = canvasSize.w
-      tempCanvasRef.current.height = canvasSize.h
-    }
-    setImageKey(k => k + 1)
-  }, [canvasSize, sourceCanvasRef, tempCanvasRef])
-
-  useEffect(() => {
-    if (hasImage && sourceCanvasRef.current?.width) {
+    if (hasImage && sourceCanvasRef.current) {
       renderEffect(activeEffect, params)
     }
   }, [activeEffect, params, hasImage, imageKey, renderEffect])
@@ -68,6 +52,21 @@ export default function EffectPage() {
     const file = e.dataTransfer.files[0]
     if (file && file.type.startsWith('image/')) handleImageLoad(file)
   }, [handleImageLoad])
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'o') {
+        e.preventDefault()
+        fileInputRef.current?.click()
+      }
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault()
+        exportCanvas()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [exportCanvas])
 
   return (
     <div className="editor">
@@ -132,10 +131,10 @@ export default function EffectPage() {
             flex: 1, display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center', gap: 16
           }}>
-            <p style={{ fontSize: 16, color: 'var(--text-h)', margin: 0 }}>No image uploaded</p>
-            <p style={{ fontSize: 13, color: 'var(--text)', margin: 0 }}>Drop an image here or use Ctrl+O</p>
+            <p style={{ fontSize: 16, color: 'var(--text-h)', margin: 0 }}>Drop an image here</p>
+            <p style={{ fontSize: 13, color: 'var(--text)', margin: 0 }}>or use Ctrl+O to open a file</p>
             <label className="upload-btn">
-              Get started
+              Open image
               <input type="file" accept=".jpg,.jpeg,.png" style={{ display: 'none' }}
                 onChange={e => { const f = e.target.files?.[0]; if (f) handleImageLoad(f) }} />
             </label>
@@ -154,7 +153,9 @@ export default function EffectPage() {
             </div>
             <div className="export-bar">
               <button className="export-btn" onClick={() => exportCanvas()}>Export canvas</button>
+              <button className="export-btn" onClick={() => fileInputRef.current?.click()}>Open image</button>
               <span className="hotkey">Ctrl + S</span>
+              <span className="hotkey">Ctrl + O</span>
             </div>
           </>
         )}

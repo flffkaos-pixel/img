@@ -30,43 +30,28 @@ export function useCanvas() {
     originalImageRef.current = img;
   }, []);
 
-  const setupCanvas = useCallback((img: HTMLImageElement) => {
-    const canvas = sourceCanvasRef.current;
-    const tempCanvas = tempCanvasRef.current;
-    if (!canvas) return { width: 0, height: 0 };
-
-    const width = img.width;
-    const height = img.height;
-
-    canvas.width = width;
-    canvas.height = height;
-
-    if (tempCanvas) {
-      tempCanvas.width = width;
-      tempCanvas.height = height;
-    }
-
-    const ctx = canvas.getContext('2d')!;
-    ctx.drawImage(img, 0, 0, width, height);
-
-    return { width, height };
-  }, []);
-
   const renderEffect = useCallback((
     effectName: EffectName,
     params: EffectParams
   ) => {
     const sourceCanvas = sourceCanvasRef.current;
     const outputCanvas = outputCanvasRef.current;
+    const tempCanvas = tempCanvasRef.current;
     const originalImg = originalImageRef.current;
     if (!sourceCanvas || !outputCanvas || !originalImg) return;
 
-    outputCanvas.width = sourceCanvas.width;
-    outputCanvas.height = sourceCanvas.height;
+    // Ensure canvas matches original image dimensions
+    sourceCanvas.width = originalImg.width;
+    sourceCanvas.height = originalImg.height;
+    if (tempCanvas) {
+      tempCanvas.width = originalImg.width;
+      tempCanvas.height = originalImg.height;
+    }
+    outputCanvas.width = originalImg.width;
+    outputCanvas.height = originalImg.height;
 
     const srcCtx = sourceCanvas.getContext('2d')!;
-
-    srcCtx.drawImage(originalImg, 0, 0, sourceCanvas.width, sourceCanvas.height);
+    srcCtx.drawImage(originalImg, 0, 0);
 
     if (params.blur > 0) {
       const tempCanvas = tempCanvasRef.current;
@@ -103,7 +88,6 @@ export function useCanvas() {
     tempCanvasRef,
     loadImage,
     loadSample,
-    setupCanvas,
     renderEffect,
     exportCanvas,
   };
