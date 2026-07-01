@@ -3,34 +3,65 @@ import { useParams, Link } from 'react-router-dom'
 import type { EffectName, EffectParams } from '../types'
 import { DEFAULT_EFFECT_PARAMS, EFFECTS } from '../types'
 import { useCanvas } from '../hooks/useCanvas'
+import { generateSampleImage } from '../utils/sampleImage'
 
 export default function EffectPage() {
   const { effectName } = useParams<{ effectName: string }>()
   const [params, setParams] = useState<EffectParams>(DEFAULT_EFFECT_PARAMS)
   const [hasImage, setHasImage] = useState(false)
   const [imageKey, setImageKey] = useState(0)
+  const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 })
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const sampleLoaded = useRef(false)
 
   const {
     sourceCanvasRef, outputCanvasRef, tempCanvasRef,
-    loadImage, setupCanvas, renderEffect, exportCanvas
+    loadImage, loadSample, renderEffect, exportCanvas
   } = useCanvas()
 
   const activeEffect = (effectName || 'stippling') as EffectName
   const effectConfig = EFFECTS.find(e => e.name === activeEffect)
 
+  const initImage = useCallback(async (img: HTMLImageElement) => {
+    loadSample(img)
+    setCanvasSize({ w: img.width, h: img.height })
+    setHasImage(true)
+    // setupCanvas runs after canvas renders via effect below
+  }, [loadSample])
+
   useEffect(() => {
-    if (hasImage) {
+    if (sampleLoaded.current) return
+    sampleLoaded.current = true
+    generateSampleImage().then(initImage)
+  }, [initImage])
+
+  useEffect(() => {
+    if (!hasImage || !sourceCanvasRef.current) return
+    setupCanvasFromImage()
+  }, [hasImage])
+
+  const setupCanvasFromImage = useCallback(() => {
+    const canvas = sourceCanvasRef.current
+    if (!canvas) return
+    canvas.width = canvasSize.w
+    canvas.height = canvasSize.h
+    if (tempCanvasRef.current) {
+      tempCanvasRef.current.width = canvasSize.w
+      tempCanvasRef.current.height = canvasSize.h
+    }
+    setImageKey(k => k + 1)
+  }, [canvasSize, sourceCanvasRef, tempCanvasRef])
+
+  useEffect(() => {
+    if (hasImage && sourceCanvasRef.current?.width) {
       renderEffect(activeEffect, params)
     }
   }, [activeEffect, params, hasImage, imageKey, renderEffect])
 
   const handleImageLoad = useCallback(async (file: File) => {
     const img = await loadImage(file)
-    setupCanvas(img)
-    setHasImage(true)
-    setImageKey(k => k + 1)
-  }, [loadImage, setupCanvas])
+    initImage(img)
+  }, [loadImage, initImage])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -113,7 +144,7 @@ export default function EffectPage() {
           <>
             <div className="canvas-size">
               Canvas Size <span style={{ color: 'var(--text-h)' }}>
-                {sourceCanvasRef.current?.width || 0} x {sourceCanvasRef.current?.height || 0}
+                {canvasSize.w} x {canvasSize.h}
               </span>
             </div>
             <div className="canvas-wrap">

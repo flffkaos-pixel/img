@@ -26,6 +26,10 @@ export function useCanvas() {
     });
   }, []);
 
+  const loadSample = useCallback((img: HTMLImageElement) => {
+    originalImageRef.current = img;
+  }, []);
+
   const setupCanvas = useCallback((img: HTMLImageElement) => {
     const canvas = sourceCanvasRef.current;
     const tempCanvas = tempCanvasRef.current;
@@ -98,6 +102,7 @@ export function useCanvas() {
     outputCanvasRef,
     tempCanvasRef,
     loadImage,
+    loadSample,
     setupCanvas,
     renderEffect,
     exportCanvas,
