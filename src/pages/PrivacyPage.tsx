@@ -1,6 +1,6 @@
 export default function PrivacyPage() {
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', padding: '40px 24px', lineHeight: 1.7 }}>
+    <div className="content-page">
       <h1>Privacy Policy</h1>
       <p><em>Last updated: July 2, 2026</em></p>
 
@@ -18,6 +18,6 @@ export default function PrivacyPage() {
 
       <h2>5. Contact</h2>
       <p>If you have any questions, please contact us through the <a href="/about">About page</a>.</p>
-    </main>
+    </div>
   )
 }

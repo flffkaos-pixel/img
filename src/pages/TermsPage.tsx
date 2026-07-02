@@ -1,6 +1,6 @@
 export default function TermsPage() {
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', padding: '40px 24px', lineHeight: 1.7 }}>
+    <div className="content-page">
       <h1>Terms of Service</h1>
       <p><em>Last updated: July 2, 2026</em></p>
 
@@ -21,6 +21,6 @@ export default function TermsPage() {
 
       <h2>6. Contact</h2>
       <p>For questions, visit the <a href="/about">About page</a>.</p>
-    </main>
+    </div>
   )
 }

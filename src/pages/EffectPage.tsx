@@ -59,9 +59,7 @@ export default function EffectPage() {
       <div className="sidebar">
         <Link to="/effects" className="back-link">&larr; All Effects</Link>
         <div style={{ marginBottom: 20 }}>
-          <h3 style={{ fontSize: 14, color: 'var(--text-h)', margin: 0 }}>
-            {effectConfig?.label || activeEffect}
-          </h3>
+          <h3>{effectConfig?.label || activeEffect}</h3>
           <p style={{ fontSize: 12, color: 'var(--text)', margin: '4px 0 0' }}>
             {effectConfig?.category}
           </p>
@@ -70,41 +68,35 @@ export default function EffectPage() {
         <SliderControl label="Canvas Size" value={outputSize} min={100} max={2000} step={1}
           onChange={setOutputSize} />
 
-        <h3 style={{ fontSize: 14, marginBottom: 12, color: 'var(--text-h)' }}>
-          Image Preprocessing
-        </h3>
-        <SliderControl label="Blur" value={params.blur} min={0} max={10} step={0.1}
-          onChange={v => setParams(p => ({ ...p, blur: v }))} />
-        <SliderControl label="Grain" value={params.grain} min={0} max={1} step={0.01}
-          onChange={v => setParams(p => ({ ...p, grain: v }))} />
-        <SliderControl label="Gamma" value={params.gamma} min={0.1} max={2} step={0.1}
-          onChange={v => setParams(p => ({ ...p, gamma: v }))} />
-        <SliderControl label="Black Point" value={params.blackPoint} min={0} max={255} step={1}
-          onChange={v => setParams(p => ({ ...p, blackPoint: v }))} />
-        <SliderControl label="White Point" value={params.whitePoint} min={0} max={255} step={1}
-          onChange={v => setParams(p => ({ ...p, whitePoint: v }))} />
+        <details className="section" open>
+          <summary>Image Preprocessing</summary>
+          <div className="content">
+            <SliderControl label="Blur" value={params.blur} min={0} max={10} step={0.1}
+              onChange={v => setParams(p => ({ ...p, blur: v }))} />
+            <SliderControl label="Grain" value={params.grain} min={0} max={1} step={0.01}
+              onChange={v => setParams(p => ({ ...p, grain: v }))} />
+            <SliderControl label="Gamma" value={params.gamma} min={0.1} max={2} step={0.1}
+              onChange={v => setParams(p => ({ ...p, gamma: v }))} />
+            <SliderControl label="Black Point" value={params.blackPoint} min={0} max={255} step={1}
+              onChange={v => setParams(p => ({ ...p, blackPoint: v }))} />
+            <SliderControl label="White Point" value={params.whitePoint} min={0} max={255} step={1}
+              onChange={v => setParams(p => ({ ...p, whitePoint: v }))} />
+          </div>
+        </details>
 
-        <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '16px 0' }} />
-        <label style={{
-          display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer',
-          fontSize: 13, color: 'var(--text-h)', marginBottom: 16, fontFamily: 'monospace'
-        }}>
-          <span>[</span>
+        <div className="toggle-box">
+          <span className="bracket">[</span>
           <input type="checkbox" checked={params.showEffect}
-            onChange={e => setParams(p => ({ ...p, showEffect: e.target.checked }))}
-            style={{ margin: 0 }} />
-          <span>]</span>
-          <span style={{ fontFamily: 'var(--sans)' }}>Show Effect</span>
-        </label>
-        <h3 style={{ fontSize: 14, marginBottom: 12, color: 'var(--text-h)' }}>
-          {effectConfig?.label || activeEffect} Settings
-        </h3>
+            onChange={e => setParams(p => ({ ...p, showEffect: e.target.checked }))} />
+          <span className="bracket">]</span>
+          <span className="label">Show Effect</span>
+        </div>
+
+        <h3>{effectConfig?.label || activeEffect} Settings</h3>
         <SliderControl label="Threshold" value={params.threshold} min={0} max={255} step={1}
           onChange={v => setParams(p => ({ ...p, threshold: v }))} />
         <div className="slider-group">
-          <label style={{ fontSize: 12, color: 'var(--text)', display: 'block', marginBottom: 4 }}>
-            Grid Type
-          </label>
+          <div className="label">Grid Type</div>
           <div style={{ display: 'flex', gap: 4 }}>
             <button className={params.gridType === 'Regular' ? 'grid-btn active' : 'grid-btn'}
               onClick={() => setParams(p => ({ ...p, gridType: 'Regular' }))}>Regular</button>
@@ -128,15 +120,12 @@ export default function EffectPage() {
         onDrop={handleDrop}
         onDragOver={e => e.preventDefault()}>
         {!hasImage ? (
-          <div style={{
-            flex: 1, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: 16
-          }}>
-            <p style={{ fontSize: 16, color: 'var(--text-h)', margin: 0 }}>Upload media</p>
-            <p style={{ fontSize: 13, color: 'var(--text)', margin: 0 }}>.jpg, .png, or .mp4</p>
-            <label className="upload-btn">
+          <div className="canvas-empty">
+            <p className="hint">Upload media</p>
+            <p className="sub">.jpg, .png, or .mp4</p>
+            <label className="btn">
               Get started
-              <input type="file" accept=".jpg,.jpeg,.png,.mp4" style={{ display: 'none' }}
+              <input type="file" accept=".jpg,.jpeg,.png,.mp4"
                 onChange={e => { const f = e.target.files?.[0]; if (f) handleImageLoad(f) }} />
             </label>
           </div>
@@ -163,18 +152,16 @@ export default function EffectPage() {
               <canvas ref={outputCanvasRef} />
             </div>
             <div className="export-bar">
-              <button className="export-btn" onClick={() => exportCanvas()}>Export canvas</button>
-              <button className="export-btn" onClick={() => fileInputRef.current?.click()}>Upload media</button>
+              <button className="btn" onClick={() => exportCanvas()}>Export canvas</button>
+              <button className="btn btn-outline" onClick={() => fileInputRef.current?.click()}>Upload media</button>
             </div>
-            <div style={{ padding: '6px 20px', fontSize: 12, color: 'var(--text)', textAlign: 'center' }}>
-              .jpg, .png, or .mp4
-            </div>
+            <div className="format-hint">.jpg, .png, or .mp4</div>
           </>
         )}
       </div>
 
       <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.mp4"
-        style={{ display: 'none' }}
+        className="hidden-file"
         onChange={e => { const f = e.target.files?.[0]; if (f) handleImageLoad(f) }} />
     </div>
   )
@@ -184,14 +171,13 @@ function SliderControl({ label, value, min, max, step, onChange }: {
   label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void
 }) {
   return (
-    <div className="slider-group" style={{ marginBottom: 16 }}>
+    <div className="slider-group">
       <div className="label">
         <span>{label}</span>
       </div>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+      <div className="slider-control">
         <input type="range" min={min} max={max} step={step} value={value}
-          onChange={e => onChange(parseFloat(e.target.value))}
-          style={{ flex: 1 }} />
+          onChange={e => onChange(parseFloat(e.target.value))} />
         <input type="number" min={min} max={max} step={step} value={value}
           onChange={e => {
             let v = parseFloat(e.target.value)
@@ -199,13 +185,6 @@ function SliderControl({ label, value, min, max, step, onChange }: {
             if (v < min) v = min
             if (v > max) v = max
             onChange(v)
-          }}
-          style={{
-            width: 60, padding: '4px 6px',
-            border: '1px solid var(--border)',
-            borderRadius: 4, background: 'var(--bg)',
-            color: 'var(--text-h)', fontSize: 12,
-            fontFamily: 'inherit', textAlign: 'center'
           }} />
       </div>
     </div>

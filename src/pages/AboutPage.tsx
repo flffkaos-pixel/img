@@ -1,6 +1,6 @@
 export default function AboutPage() {
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', padding: '40px 24px', lineHeight: 1.7 }}>
+    <div className="content-page">
       <h1>About Designstack</h1>
 
       <p>Designstack is a free online image effect editor that lets you apply 16 unique Lo‑Fi effects to your images and videos — all processing happens in your browser. No uploads, no sign‑up, no data collection.</p>
@@ -28,6 +28,6 @@ export default function AboutPage() {
         <a href="/privacy">Privacy Policy</a> &middot;
         <a href="/terms">Terms of Service</a>
       </p>
-    </main>
+    </div>
   )
 }

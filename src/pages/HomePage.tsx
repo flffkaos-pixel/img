@@ -3,18 +3,9 @@ import { EFFECTS } from '../types'
 
 export default function HomePage() {
   return (
-    <div
-      style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        padding: '60px 20px', gap: '12px'
-      }}
-    >
-      <h1 style={{ fontSize: 48, color: 'var(--text-h)', margin: 0, letterSpacing: -1 }}>
-        Designstack
-      </h1>
-      <p style={{ fontSize: 16, color: 'var(--text)', margin: 0 }}>
-        Select a tool to start editing your image
-      </p>
+    <div className="page-home">
+      <h1>Designstack</h1>
+      <p>Select a tool to start editing your image</p>
 
       <div className="effects-grid">
         {EFFECTS.filter(e => e.category === 'effects').map(e => (
