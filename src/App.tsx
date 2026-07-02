@@ -8,6 +8,8 @@ function App() {
         <nav>
           <Link to="/effects">Effects</Link>
           <Link to="/about">About</Link>
+          <Link to="/privacy">Privacy</Link>
+          <Link to="/terms">Terms</Link>
         </nav>
       </header>
       <div className="main">
