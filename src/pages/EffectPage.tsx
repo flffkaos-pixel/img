@@ -26,8 +26,8 @@ export default function EffectPage() {
   const initImage = useCallback(async (img: HTMLImageElement) => {
     loadSample(img)
     setCanvasSize({ w: img.width, h: img.height })
+    setOutputSize(Math.min(img.width, 2000))
     setHasImage(true)
-    // force re-render effect on new image
     setImageKey(k => k + 1)
   }, [loadSample])
 
@@ -54,21 +54,6 @@ export default function EffectPage() {
     if (file && file.type.startsWith('image/')) handleImageLoad(file)
   }, [handleImageLoad])
 
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === 'o') {
-        e.preventDefault()
-        fileInputRef.current?.click()
-      }
-      if (e.ctrlKey && e.key === 's') {
-        e.preventDefault()
-        exportCanvas()
-      }
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [exportCanvas])
-
   return (
     <div className="editor">
       <div className="sidebar">
@@ -82,7 +67,7 @@ export default function EffectPage() {
           </p>
         </div>
 
-        <SliderControl label="Canvas Size" value={outputSize} min={100} max={1000} step={1}
+        <SliderControl label="Canvas Size" value={outputSize} min={100} max={2000} step={1}
           onChange={setOutputSize} />
 
         <h3 style={{ fontSize: 14, marginBottom: 12, color: 'var(--text-h)' }}>
@@ -180,7 +165,6 @@ export default function EffectPage() {
             <div className="export-bar">
               <button className="export-btn" onClick={() => exportCanvas()}>Export canvas</button>
               <button className="export-btn" onClick={() => fileInputRef.current?.click()}>Upload media</button>
-              <span className="hotkey">Ctrl + S Ctrl + O</span>
             </div>
             <div style={{ padding: '6px 20px', fontSize: 12, color: 'var(--text)', textAlign: 'center' }}>
               .jpg, .png, or .mp4
