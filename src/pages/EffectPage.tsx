@@ -58,11 +58,10 @@ export default function EffectPage() {
     <div className="editor">
       <div className="sidebar">
         <Link to="/effects" className="back-link">&larr; All Effects</Link>
-        <div style={{ marginBottom: 20 }}>
-          <h3>{effectConfig?.label || activeEffect}</h3>
-          <p style={{ fontSize: 12, color: 'var(--text)', margin: '4px 0 0' }}>
-            {effectConfig?.category}
-          </p>
+
+        <div className="effect-meta">
+          <h2>{effectConfig?.label || activeEffect}</h2>
+          <div className="cat">{effectConfig?.category}</div>
         </div>
 
         <SliderControl label="Canvas Size" value={outputSize} min={100} max={2000} step={1}
@@ -84,6 +83,8 @@ export default function EffectPage() {
           </div>
         </details>
 
+        <hr />
+
         <div className="toggle-box">
           <span className="bracket">[</span>
           <input type="checkbox" checked={params.showEffect}
@@ -95,15 +96,17 @@ export default function EffectPage() {
         <h3>{effectConfig?.label || activeEffect} Settings</h3>
         <SliderControl label="Threshold" value={params.threshold} min={0} max={255} step={1}
           onChange={v => setParams(p => ({ ...p, threshold: v }))} />
+
         <div className="slider-group">
           <div className="label">Grid Type</div>
-          <div style={{ display: 'flex', gap: 4 }}>
+          <div className="btn-group">
             <button className={params.gridType === 'Regular' ? 'grid-btn active' : 'grid-btn'}
               onClick={() => setParams(p => ({ ...p, gridType: 'Regular' }))}>Regular</button>
             <button className={params.gridType === 'Benday' ? 'grid-btn active' : 'grid-btn'}
               onClick={() => setParams(p => ({ ...p, gridType: 'Benday' }))}>Benday</button>
           </div>
         </div>
+
         <SliderControl label="Grid Angle" value={params.gridAngle} min={-45} max={45} step={1}
           onChange={v => setParams(p => ({ ...p, gridAngle: v }))} />
         <SliderControl label="Y Squares" value={params.ySquares} min={2} max={100} step={1}
@@ -120,7 +123,8 @@ export default function EffectPage() {
         onDrop={handleDrop}
         onDragOver={e => e.preventDefault()}>
         {!hasImage ? (
-          <div className="canvas-empty">
+          <div className="canvas-empty" onClick={() => fileInputRef.current?.click()}>
+            <div className="icon">🖼</div>
             <p className="hint">Upload media</p>
             <p className="sub">.jpg, .png, or .mp4</p>
             <label className="btn">
@@ -132,19 +136,17 @@ export default function EffectPage() {
         ) : (
           <>
             <div className="canvas-size">
-              <span>Canvas Size <span style={{ color: 'var(--text-h)' }}>
-                {canvasSize.w} × {canvasSize.h}
+              <span>Original <span style={{ color: 'var(--text-h)', fontWeight: 600 }}>
+                {canvasSize.w}×{canvasSize.h}
               </span></span>
-              <span style={{ color: 'var(--text)' }}>→</span>
-              <span style={{ color: 'var(--text-h)' }}>
+              <span style={{ color: 'var(--border)' }}>/</span>
+              <span>Output <span style={{ color: 'var(--text-h)', fontWeight: 600 }}>
                 {(() => {
-                  if (!canvasSize.w) return '0 × 0'
+                  if (!canvasSize.w) return '0×0'
                   const r = canvasSize.w / canvasSize.h
-                  const ow = outputSize
-                  const oh = Math.round(outputSize / r)
-                  return `${ow} × ${oh}`
+                  return `${outputSize}×${Math.round(outputSize / r)}`
                 })()}
-              </span>
+              </span></span>
             </div>
             <div className="canvas-wrap">
               <canvas ref={sourceCanvasRef} style={{ display: 'none' }} />
@@ -155,13 +157,13 @@ export default function EffectPage() {
               <button className="btn" onClick={() => exportCanvas()}>Export canvas</button>
               <button className="btn btn-outline" onClick={() => fileInputRef.current?.click()}>Upload media</button>
             </div>
-            <div className="format-hint">.jpg, .png, or .mp4</div>
+            <div className="format-hint">.jpg · .png · .mp4</div>
           </>
         )}
       </div>
 
       <input ref={fileInputRef} type="file" accept=".jpg,.jpeg,.png,.mp4"
-        className="hidden-file"
+        style={{ display: 'none' }}
         onChange={e => { const f = e.target.files?.[0]; if (f) handleImageLoad(f) }} />
     </div>
   )
