@@ -14,12 +14,6 @@ export default function AboutPage() {
         <li>100% client-side — your files never leave your device</li>
       </ul>
 
-      <h2>Contact</h2>
-      <p>
-        Created by <a href="https://pivosoki.com" target="_blank" rel="noopener noreferrer">Daniil Sukhovskoy</a>.<br />
-        For inquiries, reach out via Threads: <a href="https://www.threads.com/@precar_dan" target="_blank" rel="noopener noreferrer">@precar_dan</a>
-      </p>
-
       <h2>License</h2>
       <p>Free for personal and commercial use. Attribution is appreciated but not required.</p>
 

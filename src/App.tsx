@@ -16,10 +16,6 @@ function App() {
         <Outlet />
       </div>
       <footer className="footer">
-        <p>
-          Designstack, created by <a href="https://pivosoki.com" target="_blank" rel="noopener noreferrer">Daniil Sukhovskoy</a>.
-          Free for personal and commercial use. Attribution appreciated.
-        </p>
         <p>&copy;Designstack 2026</p>
       </footer>
     </div>
