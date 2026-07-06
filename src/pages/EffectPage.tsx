@@ -5,6 +5,9 @@ import { DEFAULT_EFFECT_PARAMS, EFFECTS } from '../types'
 import { useCanvas } from '../hooks/useCanvas'
 import { generateSampleImage } from '../utils/sampleImage'
 
+const EXPORT_FORMATS = ['png', 'jpeg', 'webp'] as const
+type ExportFormat = typeof EXPORT_FORMATS[number]
+
 export default function EffectPage() {
   const { effectName } = useParams<{ effectName: string }>()
   const [params, setParams] = useState<EffectParams>(DEFAULT_EFFECT_PARAMS)
@@ -12,6 +15,8 @@ export default function EffectPage() {
   const [imageKey, setImageKey] = useState(0)
   const [canvasSize, setCanvasSize] = useState({ w: 0, h: 0 })
   const [outputSize, setOutputSize] = useState(600)
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('png')
+  const [toast, setToast] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const sampleLoaded = useRef(false)
 
@@ -31,6 +36,8 @@ export default function EffectPage() {
     setImageKey(k => k + 1)
   }, [loadSample])
 
+  const resetParams = () => setParams({ ...DEFAULT_EFFECT_PARAMS })
+
   useEffect(() => {
     if (sampleLoaded.current) return
     sampleLoaded.current = true
@@ -47,6 +54,12 @@ export default function EffectPage() {
     const img = await loadImage(file)
     initImage(img)
   }, [loadImage, initImage])
+
+  const handleExport = useCallback(() => {
+    exportCanvas(exportFormat)
+    setToast(`Exported as .${exportFormat}`)
+    setTimeout(() => setToast(''), 2000)
+  }, [exportCanvas, exportFormat])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -94,29 +107,29 @@ export default function EffectPage() {
         </div>
 
         <h3>{effectConfig?.label || activeEffect} Settings</h3>
-        <SliderControl label="Threshold" value={params.threshold} min={0} max={255} step={1}
-          onChange={v => setParams(p => ({ ...p, threshold: v }))} />
 
-        <div className="slider-group">
-          <div className="label">Grid Type</div>
-          <div className="btn-group">
-            <button className={params.gridType === 'Regular' ? 'grid-btn active' : 'grid-btn'}
-              onClick={() => setParams(p => ({ ...p, gridType: 'Regular' }))}>Regular</button>
-            <button className={params.gridType === 'Benday' ? 'grid-btn active' : 'grid-btn'}
-              onClick={() => setParams(p => ({ ...p, gridType: 'Benday' }))}>Benday</button>
-          </div>
-        </div>
+        {effectConfig?.params.includes('threshold') && (
+          <SliderControl label="Threshold" value={params.threshold} min={0} max={255} step={1}
+            onChange={v => setParams(p => ({ ...p, threshold: v }))} />
+        )}
+        {effectConfig?.params.includes('gridAngle') && (
+          <SliderControl label="Grid Angle" value={params.gridAngle} min={-45} max={45} step={1}
+            onChange={v => setParams(p => ({ ...p, gridAngle: v }))} />
+        )}
+        {effectConfig?.params.includes('ySquares') && (
+          <SliderControl label="Y Squares" value={params.ySquares} min={2} max={100} step={1}
+            onChange={v => setParams(p => ({ ...p, ySquares: v }))} />
+        )}
+        {effectConfig?.params.includes('xSquares') && (
+          <SliderControl label="X Squares" value={params.xSquares} min={2} max={100} step={1}
+            onChange={v => setParams(p => ({ ...p, xSquares: v }))} />
+        )}
+        {effectConfig?.params.includes('maxSquareWidth') && (
+          <SliderControl label="Max Width" value={params.maxSquareWidth} min={1} max={50} step={1}
+            onChange={v => setParams(p => ({ ...p, maxSquareWidth: v }))} />
+        )}
 
-        <SliderControl label="Grid Angle" value={params.gridAngle} min={-45} max={45} step={1}
-          onChange={v => setParams(p => ({ ...p, gridAngle: v }))} />
-        <SliderControl label="Y Squares" value={params.ySquares} min={2} max={100} step={1}
-          onChange={v => setParams(p => ({ ...p, ySquares: v }))} />
-        <SliderControl label="X Squares" value={params.xSquares} min={2} max={100} step={1}
-          onChange={v => setParams(p => ({ ...p, xSquares: v }))} />
-        <SliderControl label="Min Width" value={params.minSquareWidth} min={1} max={50} step={1}
-          onChange={v => setParams(p => ({ ...p, minSquareWidth: v }))} />
-        <SliderControl label="Max Width" value={params.maxSquareWidth} min={1} max={50} step={1}
-          onChange={v => setParams(p => ({ ...p, maxSquareWidth: v }))} />
+        <button className="btn btn-outline reset-btn" onClick={resetParams}>Reset to defaults</button>
       </div>
 
       <div className="canvas-area"
@@ -154,10 +167,17 @@ export default function EffectPage() {
               <canvas ref={outputCanvasRef} />
             </div>
             <div className="export-bar">
-              <button className="btn" onClick={() => exportCanvas()}>Export canvas</button>
+              <button className="btn" onClick={handleExport}>Export canvas</button>
+              <div className="btn-group">
+                {EXPORT_FORMATS.map(f => (
+                  <button key={f} className={`grid-btn${exportFormat === f ? ' active' : ''}`}
+                    onClick={() => setExportFormat(f)}>.{f}</button>
+                ))}
+              </div>
               <button className="btn btn-outline" onClick={() => fileInputRef.current?.click()}>Upload media</button>
             </div>
             <div className="format-hint">.jpg · .png · .mp4</div>
+            {toast && <div className="toast">{toast}</div>}
           </>
         )}
       </div>

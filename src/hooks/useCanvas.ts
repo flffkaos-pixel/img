@@ -114,13 +114,14 @@ export function useCanvas() {
     }
   }, []);
 
-  const exportCanvas = useCallback((filename = 'export.png') => {
+  const exportCanvas = useCallback((format: 'png' | 'jpeg' | 'webp' = 'png', quality = 0.92) => {
     const canvas = outputCanvasRef.current;
     if (!canvas) return;
 
+    const mime = { png: 'image/png', jpeg: 'image/jpeg', webp: 'image/webp' }[format];
     const link = document.createElement('a');
-    link.download = filename;
-    link.href = canvas.toDataURL('image/png');
+    link.download = `designstack.${format}`;
+    link.href = canvas.toDataURL(mime, quality);
     link.click();
   }, []);
 

@@ -516,6 +516,23 @@ details.section .content {
   font-weight: 500;
 }
 
+/* ─── Toast ─── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  translate: -50%;
+  padding: 10px 24px;
+  background: var(--text-h);
+  color: var(--bg);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp .25s ease-out;
+  z-index: 200;
+}
+
 /* ─── Buttons ─── */
 .btn {
   position: relative;
@@ -558,6 +575,12 @@ details.section .content {
 .btn-outline::after { display: none; }
 .btn-outline:hover {
   background: var(--accent-subtle);
+}
+.reset-btn {
+  width: 100%;
+  margin-top: 20px;
+  font-size: 12px;
+  padding: 8px 16px;
 }
 
 /* ─── Grid toggle buttons ─── */
