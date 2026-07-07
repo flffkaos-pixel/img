@@ -12,6 +12,7 @@
     "deploy:ci": "npm run build && wrangler pages deploy dist --project-name designstack"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.0"
