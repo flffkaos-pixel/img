@@ -67,6 +67,20 @@ export default function EffectPage() {
     if (file && file.type.startsWith('image/')) handleImageLoad(file)
   }, [handleImageLoad])
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!hasImage) return
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault(); handleExport()
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
+        e.preventDefault(); fileInputRef.current?.click()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [hasImage, handleExport])
+
   return (
     <div className="editor">
       <div className="sidebar">
@@ -130,6 +144,8 @@ export default function EffectPage() {
         )}
 
         <button className="btn btn-outline reset-btn" onClick={resetParams}>Reset to defaults</button>
+
+        <div className="shortcut-hint">Ctrl+O upload · Ctrl+S export</div>
       </div>
 
       <div className="canvas-area"

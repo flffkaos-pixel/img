@@ -561,6 +561,14 @@ details.section .content {
   font-size: 12px;
   padding: 8px 16px;
 }
+.shortcut-hint {
+  font-size: 11px;
+  color: var(--text);
+  text-align: center;
+  margin: 12px 0 0;
+  font-family: var(--mono);
+  opacity: .6;
+}
 
 /* ─── Grid toggle buttons ─── */
 .btn-group {
