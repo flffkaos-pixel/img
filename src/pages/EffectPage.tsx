@@ -137,7 +137,7 @@ export default function EffectPage() {
         onDragOver={e => e.preventDefault()}>
         {!hasImage ? (
           <div className="canvas-empty" onClick={() => fileInputRef.current?.click()}>
-            <div className="icon">🖼</div>
+            <div className="icon">⊞</div>
             <p className="hint">Upload media</p>
             <p className="sub">.jpg, .png, or .mp4</p>
             <label className="btn">
