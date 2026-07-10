@@ -166,6 +166,26 @@ header nav a:hover {
   padding: 72px 20px 60px;
   gap: 8px;
   animation: fadeUp .5s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+.page-home .aurora-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.page-home .badge,
+.page-home h1,
+.page-home .tagline,
+.page-home .effects-grid {
+  position: relative;
+  z-index: 1;
+}
+.hero-shiny {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -.03em;
 }
 .page-home h1 {
   font-size: 48px;
@@ -173,6 +193,9 @@ header nav a:hover {
   letter-spacing: -.03em;
   color: var(--text-h);
   animation: fadeIn 1s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .page-home .tagline {
   font-size: 16px;
