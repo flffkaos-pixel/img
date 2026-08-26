@@ -17,6 +17,15 @@ export default function AboutPage() {
       <h2>License</h2>
       <p>Free for personal and commercial use. Attribution is appreciated but not required.</p>
 
+      <h2>Contact</h2>
+      <p>
+        Questions, bug reports, or copyright inquiries:{" "}
+        <a href="mailto:freeutilities.contact@gmail.com">freeutilities.contact@gmail.com</a> &middot;{" "}
+        <a href="https://github.com/flffkaos-pixel" target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+      </p>
+
       <h2>Links</h2>
       <p>
         <a href="/privacy">Privacy Policy</a> &middot;
